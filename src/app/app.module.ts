@@ -7,13 +7,17 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ProductPage } from '../pages/product/product';
+import { WishlistPage } from '../pages/wishlist/wishlist';
 import { SampleServiceProvider } from '../providers/sample-service/sample-service';
 import { ProductsProvider } from '../providers/products/products';
+import { WishlistServiceProvider } from '../providers/wishlist-service/wishlist-service';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    ProductPage,
+    WishlistPage
   ],
   imports: [
     BrowserModule,
@@ -23,14 +27,16 @@ import { ProductsProvider } from '../providers/products/products';
   entryComponents: [
     MyApp,
     HomePage,
-    ProductPage
+    ProductPage,
+    WishlistPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SampleServiceProvider,
-    ProductsProvider
+    ProductsProvider,
+    WishlistServiceProvider
   ]
 })
 export class AppModule {}

@@ -5,6 +5,9 @@ import { IonicModule, NavController } from 'ionic-angular';
 import { MyApp } from '../../app/app.component';
 import { ProductPage } from './product';
 import { ProductsProvider } from '../../providers/products/products';
+import { ProductsMock, NavMock, WishlistServiceMock } from '../../mocks';
+import { WishlistPage } from '../wishlist/wishlist';
+import { WishlistServiceProvider } from '../../providers/wishlist-service/wishlist-service';
  
 let comp: ProductPage;
 let fixture: ComponentFixture<ProductPage>;
@@ -19,7 +22,19 @@ describe('Page: Product Page', () => {
  
             declarations: [MyApp, ProductPage],
             providers: [
-                NavController, ProductsProvider
+                NavController, 
+                { 
+                    provide: ProductsProvider,
+                    useClass: ProductsMock
+                },
+                {
+                    provide: ProductsProvider,
+                    useClass: ProductsMock
+                },
+                {
+                    provide: WishlistServiceProvider,
+                    useClass: WishlistServiceMock
+                }
             ],
  
             imports: [
@@ -66,5 +81,34 @@ describe('Page: Product Page', () => {
  
     });
  
+ it('should be able to launch wishlist page', () => {
+ 
+        let navCtrl = fixture.debugElement.injector.get(NavController);
+        spyOn(navCtrl, 'push');
+ 
+        de = fixture.debugElement.query(By.css('ion-buttons button'));
+ 
+        de.triggerEventHandler('click', null);
+ 
+        expect(navCtrl.push).toHaveBeenCalledWith(WishlistPage);
+ 
+    });
+
+    it('should add product to wishlist when add to wishlist button clicked', () => {
+ 
+    let wishlistService = fixture.debugElement.injector.get(WishlistServiceProvider);
+    spyOn(wishlistService, 'addProduct');
+ 
+    let productsService = fixture.debugElement.injector.get(ProductsProvider);
+    let firstProduct = productsService.products[0];
+ 
+    fixture.detectChanges();
+ 
+    de = fixture.debugElement.query(By.css('ion-item-sliding button'));
+    de.triggerEventHandler('click', null);
+ 
+    expect(wishlistService.addProduct).toHaveBeenCalledWith(firstProduct);
+ 
+});
  
 });
